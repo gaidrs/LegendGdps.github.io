@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Топ-лист демонов Geometry Dash</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            text-align: center;
+            color: #ff6600;
+            text-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+        }
+        .demon-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .demon-card {
+            background-color: #333333;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.3s;
+            border-left: 5px solid #ff6600;
+        }
+        .demon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .demon-card h3 {
+            margin-top: 0;
+            color: #ff6600;
+        }
+        .demon-card p {
+            margin: 8px 0;
+        }
+        .difficulty {
+            font-weight: bold;
+        }
+        .extreme {
+            color: #ff0000;
+        }
+        .insane {
+            color: #ff66ff;
+        }
+        .hard {
+            color: #ff9933;
+        }
+        .creator {
+            color: #66ccff;
+        }
+        .edit-btn {
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .edit-form {
+            display: none;
+            margin-top: 10px;
+        }
+        .edit-form input, .edit-form textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #444;
+            border: 1px solid #666;
+            color: white;
+        }
+        .save-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            background-color: #444;
+            border: 1px solid #666;
+            color: white;
+            border-radius: 4px;
+        }
+        .add-demon {
+            margin-top: 30px;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .add-demon h3 {
+            margin-top: 0;
+        }
+        .add-demon input, .add-demon textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #444;
+            border: 1px solid #666;
+            color: white;
+        }
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Топ-лист демонов Geometry Dash</h1>
+        
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Поиск демонов..." onkeyup="searchDemons()">
+        </div>
+        
+        <div class="demon-list" id="demonList">
+            <!-- Демоны будут добавлены через JavaScript -->
+        </div>
+        
+        <div class="add-demon">
+            <h3>Добавить нового демона</h3>
+            <input type="text" id="newName" placeholder="Название демона">
+            <input type="text" id="newDifficulty" placeholder="Сложность (Extreme Demon, Insane Demon, Hard Demon)">
+            <input type="text" id="newCreator" placeholder="Создатель">
+            <input type="text" id="newVersion" placeholder="Версия GD">
+            <textarea id="newDescription" placeholder="Описание"></textarea>
+            <button class="add-btn" onclick="addDemon()">Добавить демона</button>
+        </div>
+    </div>
+
+    <script>
+        // Массив с демонами
+        let demons = [
+            {
+                name: "Abyss of Darkness",
+                difficulty: "Extreme Demon",
+                creator: "Riot",
+                version: "2.11",
+                description: "Один из самых сложных демонов в игре с невероятно сложными трюками и управлением."
+            },
+            {
+                name: "Bloodbath",
+                difficulty: "Extreme Demon",
+                creator: "Riot",
+                version: "1.9",
+                description: "Легендарный демон, который долгое время был самым сложным уровнем в игре."
+            },
+            {
+                name: "Sakupen Circles",
+                difficulty: "Insane Demon",
+                creator: "Noobas",
+                version: "1.9",
+                description: "Известен своими сложными круговыми движениями и точными прыжками."
+            },
+            {
+                name: "Nine Circles",
+                difficulty: "Hard Demon",
+                creator: "Zobros",
+                version: "1.9",
+                description: "Классический демон, давший начало целому жанру уровней с волновым геймплеем."
+            },
+            {
+                name: "Acu",
+                difficulty: "Extreme Demon",
+                creator: "Neigefeu",
+                version: "2.1",
+                description: "Популярный экстрим демон с отличным дизайном и сбалансированной сложностью."
+            },
+            {
+                name: "Cataclysm",
+                difficulty: "Extreme Demon",
+                creator: "Ggb0y",
+                version: "1.9",
+                description: "Один из первых экстрим демонов, который задал новый стандарт сложности."
+            },
+            {
+                name: "Windy Landscape",
+                difficulty: "Insane Demon",
+                creator: "Serponge",
+                version: "2.0",
+                description: "Красивый уровень с уникальным дизайном и сложным геймплеем."
+            }
+        ];
+
+        // Загрузка демонов при открытии страницы
+        window.onload = function() {
+            displayDemons();
+        };
+
+        // Отображение демонов
+        function displayDemons(filteredDemons = null) {
+            const demonList = document.getElementById('demonList');
+            demonList.innerHTML = '';
+            
+            const demonsToDisplay = filteredDemons || demons;
+            
+            demonsToDisplay.forEach((demon, index) => {
+                const demonCard = document.createElement('div');
+                demonCard.className = 'demon-card';
+                demonCard.innerHTML = `
+                    <h3>${demon.name}</h3>
+                    <p><span class="difficulty ${getDifficultyClass(demon.difficulty)}">${demon.difficulty}</span></p>
+                    <p>Создатель: <span class="creator">${demon.creator}</span></p>
+                    <p>Версия: ${demon.version}</p>
+                    <p>${demon.description}</p>
+                    <button class="edit-btn" onclick="showEditForm(${index})">Редактировать</button>
+                    <div class="edit-form" id="editForm${index}">
+                        <input type="text" id="editName${index}" value="${demon.name}">
+                        <input type="text" id="editDifficulty${index}" value="${demon.difficulty}">
+                        <input type="text" id="editCreator${index}" value="${demon.creator}">
+                        <input type="text" id="editVersion${index}" value="${demon.version}">
+                        <textarea id="editDescription${index}">${demon.description}</textarea>
+                        <button class="save-btn" onclick="saveDemon(${index})">Сохранить</button>
+                    </div>
+                `;
+                demonList.appendChild(demonCard);
+            });
+        }
+
+        // Получение класса для сложности
+        function getDifficultyClass(difficulty) {
+            if (difficulty.includes('Extreme')) return 'extreme';
+            if (difficulty.includes('Insane')) return 'insane';
+            if (difficulty.includes('Hard')) return 'hard';
+            return '';
+        }
+
+        // Поиск демонов
+        function searchDemons() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredDemons = demons.filter(demon => 
+                demon.name.toLowerCase().includes(searchTerm) || 
+                demon.creator.toLowerCase().includes(searchTerm) ||
+                demon.difficulty.toLowerCase().includes(searchTerm)
+            );
+            displayDemons(filteredDemons);
+        }
+
+        // Показать форму редактирования
+        function showEditForm(index) {
+            const editForm = document.getElementById(`editForm${index}`);
+            editForm.style.display = editForm.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Сохранить изменения демона
+        function saveDemon(index) {
+            demons[index] = {
+                name: document.getElementById(`editName${index}`).value,
+                difficulty: document.getElementById(`editDifficulty${index}`).value,
+                creator: document.getElementById(`editCreator${index}`).value,
+                version: document.getElementById(`editVersion${index}`).value,
+                description: document.getElementById(`editDescription${index}`).value
+            };
+            displayDemons();
+        }
+
+        // Добавить нового демона
+        function addDemon() {
+            const newDemon = {
+                name: document.getElementById('newName').value,
+                difficulty: document.getElementById('newDifficulty').value,
+                creator: document.getElementById('newCreator').value,
+                version: document.getElementById('newVersion').value,
+                description: document.getElementById('newDescription').value
+            };
+            
+            if (newDemon.name && newDemon.difficulty && newDemon.creator) {
+                demons.push(newDemon);
+                displayDemons();
+                
+                // Очистить поля ввода
+                document.getElementById('newName').value = '';
+                document.getElementById('newDifficulty').value = '';
+                document.getElementById('newCreator').value = '';
+                document.getElementById('newVersion').value = '';
+                document.getElementById('newDescription').value = '';
+            } else {
+                alert('Пожалуйста, заполните хотя бы название, сложность и создателя!');
+            }
+        }
+    </script>
+</body>
+  </html>
